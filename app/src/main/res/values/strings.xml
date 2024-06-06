@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Pizzeria</string>
+    <string name="title_activity_product_details">ProductDetails</string>
+    <string name="title_activity_update_products">UpdateProducts</string>
+    <string name="title_activity_add_products">AddProduct</string>
+    <string name="title_activity_add_type">AddType</string>
+    <string name="title_activity_category_details">CategoryDetails</string>
+    <string name="title_activity_order_details">OrderDetail</string>
+    <string name="title_activity_update_category">UpdateCategory</string>
+    <string name="title_activity_update_user">UpdateUser</string>
+    <string name="title_activity_user_information">UserInformation</string>
+    <string name="title_activity_login">Login</string>
+</resources>

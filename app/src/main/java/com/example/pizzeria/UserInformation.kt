@@ -167,10 +167,10 @@ private fun deleteDataFromFirebase(UserID: String?, context: Context) {
 
     val db = FirebaseFirestore.getInstance();
     db.collection("User").document(UserID.toString()).delete().addOnSuccessListener {
-        Toast.makeText(context, "Product removed", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "User removed", Toast.LENGTH_SHORT).show()
         context.startActivity(Intent(context, UserInformation::class.java))
     }.addOnFailureListener {
-        Toast.makeText(context, "Error while deleting produc", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Error while deleting user", Toast.LENGTH_SHORT).show()
     }
 
 }
@@ -207,8 +207,9 @@ fun UserInformationUI(context: Context, userList: SnapshotStateList<UserData>) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Surface(
+                            color = blue,
                             shape = CircleShape,
-                            modifier = Modifier.size(80.dp)
+                            modifier = Modifier.size(100.dp)
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.user),
@@ -244,6 +245,8 @@ fun UserInformationUI(context: Context, userList: SnapshotStateList<UserData>) {
                                     Text(
                                         text = it,
                                         fontSize = 18.sp,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold,
                                         color = Pink40,
@@ -268,6 +271,8 @@ fun UserInformationUI(context: Context, userList: SnapshotStateList<UserData>) {
                                 userList[index]?.password?.let {
                                     Text(
                                         text = it,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
                                         fontSize = 18.sp,
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.SemiBold,

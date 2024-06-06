@@ -247,7 +247,7 @@ fun HomeAdminScreen(context: Context, navController: NavHostController){
 
                     }
                 }
-                context.startActivity(Intent(context, Login::class.java))
+                // context.startActivity(Intent(context, Login::class.java))
             }
             Spacer(modifier = Modifier.height(10.dp))
         }

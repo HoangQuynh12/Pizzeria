@@ -190,6 +190,9 @@ fun OrderDetailsUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                         .padding(8.dp),
                     shadowElevation = 10.dp,
                     onClick = {
+                            val i = Intent(context, Order::class.java)
+                            i.putExtra("productID", item?.OrderID)
+                            context.startActivity(i)
 
                     }
                 ) {
@@ -250,7 +253,7 @@ fun OrderDetailsUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                                 Text(text = "$ " + it)
                             }
 
-                            Spacer(modifier = Modifier.height(6.dp))
+                            Spacer(modifier = Modifier.height(3.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -278,7 +281,7 @@ fun OrderDetailsUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                                     style = MaterialTheme.typography.titleLarge
                                 )
                             }
-                            Spacer(modifier = Modifier.height(6.dp))
+//                            Spacer(modifier = Modifier.height(3.dp))
                             OutlinedButton(
                                 shape = RoundedCornerShape(7.dp),
                                 colors = ButtonDefaults.buttonColors(
@@ -309,34 +312,28 @@ fun OrderDetailsUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                                     style = MaterialTheme.typography.titleLarge
                                 )
                             }
+//                                Spacer(modifier = Modifier.height(3.dp))
+                                Surface(
+                                    onClick = {
+                                        deleteDataFromFirebase(orderList[index]?.OrderID, context)
+                                    },
+                                    color = blue
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "",
+                                        tint = red,
+                                        modifier = Modifier
+                                            .size(250.dp)
+//                                            .padding(2.dp)
+
+                                    )
+                                }
                         }
 
                     }
                 }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    )
-                    {
-                        Surface(
-                            onClick = {
-                                deleteDataFromFirebase(orderList[index]?.OrderID, context)
-                            },
-                            color = blue
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "",
-                                tint = red,
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .padding(2.dp)
-
-                            )
-                        }
-                    }
+                    
                 }
             }
         }

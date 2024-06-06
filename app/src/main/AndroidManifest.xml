@@ -50,6 +50,11 @@
             android:label="@string/title_activity_order_details"
             android:theme="@style/Theme.Pizzeria" />
         <activity
+            android:name=".Order"
+            android:exported="true"
+            android:label="@string/title_activity_order"
+            android:theme="@style/Theme.Pizzeria" />
+        <activity
             android:name=".ProductDetails"
             android:exported="true"
             android:label="@string/title_activity_product_details"

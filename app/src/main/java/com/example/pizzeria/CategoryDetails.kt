@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.pizzeria.ui.theme.PizzeriaTheme
+import com.example.pizzeria.ui.theme.blue
 import com.example.pizzeria.ui.theme.blueColor
 import com.example.pizzeria.ui.theme.red
 import com.google.firebase.firestore.CollectionReference
@@ -135,7 +136,7 @@ fun CategoryDetailsUI(context: Context, categoryList: SnapshotStateList<Category
             itemsIndexed(categoryList) { index, item ->
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = blueColor,
+                    color = blue,
                     modifier = Modifier
                         .height(100.dp)
                         .padding(8.dp)

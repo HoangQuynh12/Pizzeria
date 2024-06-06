@@ -186,7 +186,7 @@ fun HomeAdminScreen(context: Context, navController: NavHostController){
                     cardName1 = "Manager",
                     cardIcon = painterResource(id = R.drawable.ic_order)
                 ) {
-                    context.startActivity(Intent(context, CategoryDetails::class.java))
+                    context.startActivity(Intent(context, OrderDetails::class.java))
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))

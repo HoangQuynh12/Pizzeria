@@ -5,11 +5,12 @@ data class OrderData(
     val Address: String? = "",
     val Total: Double? = 0.0,
     var OrderDate: String? = "",
-    val status: String = "Chưa xác nhận",
+    val status: String = "Uncomfimred",
     val UserID: String? = "",
     val PhoneNumber: Int? = 0,
     val Name: String? = "",
+//    val ProductID: String? = "",
+//    val ProductID: Array<String> = arrayOf()
 
-//    var orderItem: OrderItem,
-//    var product: ProductData
+
 )

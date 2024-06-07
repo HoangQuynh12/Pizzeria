@@ -281,37 +281,38 @@ fun OrderDetailsUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                                     style = MaterialTheme.typography.titleLarge
                                 )
                             }
-//                            Spacer(modifier = Modifier.height(3.dp))
-                            OutlinedButton(
-                                shape = RoundedCornerShape(7.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    contentColor = Color.Black,
-                                    containerColor = darkblue
-                                ),
-                                border = BorderStroke(0.5.dp, blueColor),
-                                onClick = {
-                                    coroutineScope.launch {
-                                        try {
-                                            // Cập nhật trạng thái đơn hàng thành "Confirmed"
-                                            updateOrderStatus(
-                                                orderID = item?.OrderID ?: "",
-                                                newStatus = "Confirmed"
-                                            )
-                                            Toast.makeText(context, "Order Confirmed", Toast.LENGTH_SHORT).show()
-                                        } catch (e: Exception) {
-                                            Log.e("OrderDetails", "Error updating order status: ${e.message}")
-                                            Toast.makeText(context, "Error updating order status", Toast.LENGTH_SHORT).show()
+                                if (item.Status != "Confirmed") {
+                                    OutlinedButton(
+                                        shape = RoundedCornerShape(7.dp),
+                                        colors = ButtonDefaults.buttonColors(
+                                            contentColor = Color.Black,
+                                            containerColor = darkblue
+                                        ),
+                                        border = BorderStroke(0.5.dp, blueColor),
+                                        onClick = {
+                                            coroutineScope.launch {
+                                                try {
+                                                    updateOrderStatus(
+                                                        orderID = item.OrderID ?: "",
+                                                        newStatus = "Confirmed"
+                                                    )
+                                                    Toast.makeText(context, "Order Confirmed", Toast.LENGTH_SHORT).show()
+                                                } catch (e: Exception) {
+                                                    Log.e("OrderDetails", "Error updating order status: ${e.message}")
+                                                    Toast.makeText(context, "Error updating order status", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
                                         }
+                                    ) {
+                                        Text(
+                                            text = "Confirm",
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.SemiBold,
+                                            style = MaterialTheme.typography.titleLarge
+                                        )
                                     }
                                 }
-                            ) {
-                                Text(
-                                    text = "Confirm",
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    style = MaterialTheme.typography.titleLarge
-                                )
-                            }
+
 //                                Spacer(modifier = Modifier.height(3.dp))
                                 Surface(
                                     onClick = {

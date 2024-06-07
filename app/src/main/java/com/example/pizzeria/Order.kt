@@ -76,6 +76,7 @@ import com.example.pizzeria.ui.theme.black
 import com.example.pizzeria.ui.theme.blue
 import com.example.pizzeria.ui.theme.blueColor
 import com.example.pizzeria.ui.theme.darkblue
+import com.example.pizzeria.ui.theme.pinkitemshadow
 import com.example.pizzeria.ui.theme.red
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -104,7 +105,7 @@ class Order : ComponentActivity() {
                             ),
                             title = {
                                 Text(
-                                    text = "All Order",
+                                    text = "Detail Order",
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     fontWeight = FontWeight.Bold
@@ -117,15 +118,6 @@ class Order : ComponentActivity() {
                                     Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
                                 }
                             },
-//                            actions = {
-//                                var expanded by remember { mutableStateOf(false) }
-//                                val productType = remember { mutableStateOf("") }
-//                                val context = LocalContext.current
-//
-//                                IconButton(onClick = { expanded = true }) {
-//                                    Icon(imageVector = Icons.Filled.List, contentDescription = null)
-//                                }
-//                            }
                         )
                     }
 
@@ -163,17 +155,6 @@ class Order : ComponentActivity() {
         }
     }
 }
-private fun deleteDataFromFirebase(OrderID: String?, context: Context) {
-
-    val db = FirebaseFirestore.getInstance();
-    db.collection("Order").document(OrderID.toString()).delete().addOnSuccessListener {
-        Toast.makeText(context, "Product removed", Toast.LENGTH_SHORT).show()
-        context.startActivity(Intent(context, OrderDetails::class.java))
-    }.addOnFailureListener {
-        Toast.makeText(context, "Error while deleting produc", Toast.LENGTH_SHORT).show()
-    }
-
-}
 
 
 @SuppressLint("SuspiciousIndentation")
@@ -192,12 +173,16 @@ fun OrderUI(context: Context, orderList: SnapshotStateList<OrderData>) {
         LazyColumn {
             itemsIndexed(orderList) { index, item ->
                 Surface(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(12.dp),
                     color = blue,
                     modifier = Modifier
-                        .height(210.dp)
-                        .padding(8.dp),
-                    shadowElevation = 10.dp,
+                        .fillMaxWidth()
+                        .background(
+                            color = blue,
+                            shape = RoundedCornerShape(12.dp),
+                        )
+                        .padding(bottom = 2.dp),
+                    shadowElevation = 6.dp,
                     onClick = {
 
                     }
@@ -206,20 +191,7 @@ fun OrderUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                         modifier = Modifier.padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Surface(
-                            color = blue,
-                            shape = RoundedCornerShape(16.dp),
-                            modifier = Modifier.size(width = 100.dp, height = 100.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.order),
-                                contentScale = ContentScale.Crop,
-//                                contentDescription = null,
-                                contentDescription = "",
-                                modifier = Modifier.size(30.dp)
 
-                            )
-                        }
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -229,83 +201,149 @@ fun OrderUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                         ) {
 
                             Spacer(modifier = Modifier.height(6.dp))
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
 
-                            orderList[index]?.Name?.let {
+                                ) {
                                 Text(
-                                    text = it,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
+                                    text = "Name: ",
                                     fontSize = 22.sp,
                                     style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold
-                                )
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Pink40
+                                    )
+                                orderList[index]?.Name?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 22.sp,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
                             }
-
                             Spacer(modifier = Modifier.height(6.dp))
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
 
-                            orderList[index]?.Address?.let {
+                                ) {
                                 Text(
-                                    text = it,
+                                    text = "Address: ",
                                     fontSize = 22.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
                                     style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold
-                                )
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Pink40
+                                    )
+                                orderList[index]?.Address?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 22.sp,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
                             }
                             Spacer(modifier = Modifier.height(6.dp))
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 8.dp),
 
-                            orderList[index]?.Total?.let {
-                                Text(text = "$ " + it)
-                            }
-
+                                    ) {
+                                    Text(
+                                        text = "OrderDate: " ,
+                                        fontSize = 22.sp,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = Pink40
+                                        )
+                                    orderList[index]?.OrderDate?.let {
+                                        Text(
+                                            text = it,
+                                            fontSize = 22.sp,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
+                                }
                             Spacer(modifier = Modifier.height(6.dp))
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 8.dp),
 
-                            OutlinedButton(
-                                shape = RoundedCornerShape(7.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    contentColor = Color.Black,
-                                    containerColor = darkblue
-                                ),
-                                border = BorderStroke(0.5.dp, blueColor),
-                                onClick = {
+                                        ) {
+                                        Text(
+                                            text = "Status: " ,
+                                            fontSize = 22.sp,
+                                            style = MaterialTheme.typography.titleMedium,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Pink40
+                                            )
+                                        orderList[index]?.Status?.let {
+                                            Text(
+                                                text = it,
+                                                fontSize = 22.sp,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                        }
+                                    }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+
+                                ) {
+                                Text(
+                                    text = "PhoneNumber: " ,
+                                    fontSize = 22.sp,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Pink40
+                                    )
+                                orderList[index]?.PhoneNumber?.let {
+                                    Text(
+                                        text = ""+it,
+                                        fontSize = 22.sp,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp),
+
+                                ) {
+                                Text(
+                                    text = "Total: ",
+                                    fontSize = 22.sp,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Pink40
+                                    )
+                                orderList[index]?.Total?.let {
+                                    Text(text = "$ " + it,
+                                        fontSize = 22.sp,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
 
                                 }
-                            ) {
-                                Text(
-                                    text = "Detail",
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    style = MaterialTheme.typography.titleLarge
-                                )
                             }
+
                         }
 
                     }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    )
-                    {
-                        Surface(
-                            onClick = {
-                                deleteDataFromFirebase(orderList[index]?.OrderID, context)
-                            },
-                            color = blue
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "",
-                                tint = red,
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .padding(2.dp)
 
-                            )
-                        }
-                    }
                 }
             }
         }

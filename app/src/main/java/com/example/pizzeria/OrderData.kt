@@ -5,7 +5,7 @@ data class OrderData(
     val Address: String? = "",
     val Total: Double? = 0.0,
     var OrderDate: String? = "",
-    val status: String = "Uncomfimred",
+    val Status: String = "Uncomfimred",
     val UserID: String? = "",
     val PhoneNumber: Int? = 0,
     val Name: String? = "",
@@ -14,3 +14,10 @@ data class OrderData(
 
 
 )
+fun calculateTotal(orders: List<OrderData>): Double {
+    var totalSum = 0.0
+    for (order in orders) {
+        totalSum += order.Total ?: 0.0
+    }
+    return totalSum
+}

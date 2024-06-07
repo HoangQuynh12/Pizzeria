@@ -153,11 +153,11 @@ fun HomeAdminScreen(context: Context, navController: NavHostController){
                         .align(Alignment.CenterVertically)
                         .padding(5.dp)
                         .weight(0.5f),
-                    cardName = "Rivenue",
+                    cardName = "Revenue",
                     cardName1 = "Manager",
                     cardIcon = painterResource(id = R.drawable.ic_money)
                 ) {
-                    context.startActivity(Intent(context, ProductDetails::class.java))
+                    context.startActivity(Intent(context, Revenue::class.java))
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))

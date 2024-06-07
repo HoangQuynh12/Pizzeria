@@ -22,20 +22,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -48,18 +49,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 //import androidx.compose.ui.tooling.data.EmptyGroup.box
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.pizzeria.R
-import com.example.pizzeria.ui.theme.Pink40
 import com.example.pizzeria.ui.theme.PizzeriaTheme
-import com.example.pizzeria.ui.theme.bg
 import com.example.pizzeria.ui.theme.black
 import com.example.pizzeria.ui.theme.blue
 import com.example.pizzeria.ui.theme.blueColor
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.tasks.await
+
 
 
 class MainActivity : ComponentActivity() {
@@ -112,6 +114,7 @@ class MainActivity : ComponentActivity() {
 }
 @Composable
 fun HomeAdminScreen(context: Context, navController: NavHostController){
+//    val context = LocalContext.current // Lấy context từ Compose
     val scrollState = rememberScrollState()
     Box(
         modifier = Modifier
@@ -129,7 +132,10 @@ fun HomeAdminScreen(context: Context, navController: NavHostController){
         ) {
 //            Header()
 //            Spacer(modifier = Modifier.height(30.dp))
-            StatusCardLayout()
+            StatusCardLayout(
+                context = context,
+                navController = navController
+            )
             Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier
@@ -273,14 +279,24 @@ fun Header() {
     }
 }
 @Composable
-fun StatusCardLayout() {
+fun StatusCardLayout(context: Context, navController: NavHostController) {
+    var userCount by remember { mutableStateOf(0L) }
+    var orderCount by remember { mutableStateOf(0L) }
+    var totalConfirmed by remember { mutableStateOf(0.0) }
+
+    // Lấy dữ liệu từ Firestore và cập nhật các giá trị
+    LaunchedEffect(Unit) {
+        userCount = getUserCount()
+        orderCount = getOrderCount()
+        totalConfirmed = getTotalConfirmed()
+    }
+
     val box = Brush.linearGradient(
-        colors = listOf(blue,blue)
+        colors = listOf(blue, blue)
     )
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
@@ -293,30 +309,58 @@ fun StatusCardLayout() {
             CardColumnContent(
                 modifier = Modifier.weight(0.33f),
                 icon = painterResource(id = R.drawable.ic_pending),
-                centerText = "Pending Order",
-                bottomText = "30",
+                centerText = "User",
+                bottomText = userCount.toString(),
+                onClick = {  context.startActivity(Intent(context, UserInformation::class.java))}
+            )
 
-            ) {
-
-            }
             CardColumnContent(
                 modifier = Modifier.weight(0.33f),
                 icon = painterResource(id = R.drawable.ic_category),
-                centerText = "Completed Order",
-                bottomText = "10"
-            ) {
+                centerText = "Order",
+                bottomText = orderCount.toString(),
+                onClick = { context.startActivity(Intent(context, OrderDetails::class.java))}
+            )
 
-            }
             CardColumnContent(
                 modifier = Modifier.weight(0.33f),
                 icon = painterResource(id = R.drawable.ic_money),
                 centerText = "Revenue",
-                bottomText = "$100"
-            ) {
-
-            }
+                bottomText = "$$totalConfirmed",
+                onClick = { context.startActivity(Intent(context, Revenue::class.java))}
+            )
         }
     }
+}
+
+// Hàm để lấy số lượng người dùng
+suspend fun getUserCount(): Long {
+    val db = FirebaseFirestore.getInstance()
+    val userCollection = db.collection("User")
+    val querySnapshot = userCollection.get().await()
+    return querySnapshot.size().toLong()
+}
+
+// Hàm để lấy số lượng đơn hàng
+suspend fun getOrderCount(): Long {
+    val db = FirebaseFirestore.getInstance()
+    val orderCollection = db.collection("Order")
+    val querySnapshot = orderCollection.get().await()
+    return querySnapshot.size().toLong()
+}
+
+// Hàm để tính tổng total của các đơn hàng đã xác nhận
+suspend fun getTotalConfirmed(): Double {
+    val db = FirebaseFirestore.getInstance()
+    val orderCollection = db.collection("Order")
+    val querySnapshot = orderCollection.whereEqualTo("Status", "Confirmed").get().await()
+
+    var totalConfirmed = 0.0
+    for (document in querySnapshot) {
+        val order = document.toObject<OrderData>()
+        totalConfirmed += order.Total ?: 0.0
+    }
+    return totalConfirmed
 }
 @Composable
 fun CardColumnContent(
@@ -329,8 +373,7 @@ fun CardColumnContent(
     Column(
         modifier = modifier
             .padding(15.dp)
-            .width(100.dp)
-            .clickable { onClick() },
+            .width(100.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
 
@@ -354,7 +397,7 @@ fun CardColumnContent(
                 )
             )
         }
-        Spacer(modifier = Modifier.height(5.dp))
+//        Spacer(modifier = Modifier.height(5.dp))
         Text(
             text = bottomText,
             color = black,

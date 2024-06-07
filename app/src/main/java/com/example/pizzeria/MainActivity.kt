@@ -280,13 +280,13 @@ fun Header() {
 }
 @Composable
 fun StatusCardLayout(context: Context, navController: NavHostController) {
-    var userCount by remember { mutableStateOf(0L) }
+    var productCount by remember { mutableStateOf(0L) }
     var orderCount by remember { mutableStateOf(0L) }
     var totalConfirmed by remember { mutableStateOf(0.0) }
 
     // Lấy dữ liệu từ Firestore và cập nhật các giá trị
     LaunchedEffect(Unit) {
-        userCount = getUserCount()
+        productCount = getProductCount()
         orderCount = getOrderCount()
         totalConfirmed = getTotalConfirmed()
     }
@@ -306,17 +306,17 @@ fun StatusCardLayout(context: Context, navController: NavHostController) {
                 .background(box),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CardColumnContent(
-                modifier = Modifier.weight(0.33f),
-                icon = painterResource(id = R.drawable.ic_pending),
-                centerText = "User",
-                bottomText = userCount.toString(),
-                onClick = {  context.startActivity(Intent(context, UserInformation::class.java))}
-            )
 
             CardColumnContent(
                 modifier = Modifier.weight(0.33f),
                 icon = painterResource(id = R.drawable.ic_category),
+                centerText = "Product",
+                bottomText = productCount.toString(),
+                onClick = {  context.startActivity(Intent(context, UserInformation::class.java))}
+            )
+            CardColumnContent(
+                modifier = Modifier.weight(0.33f),
+                icon = painterResource(id = R.drawable.ic_pending),
                 centerText = "Order",
                 bottomText = orderCount.toString(),
                 onClick = { context.startActivity(Intent(context, OrderDetails::class.java))}
@@ -334,9 +334,9 @@ fun StatusCardLayout(context: Context, navController: NavHostController) {
 }
 
 // Hàm để lấy số lượng người dùng
-suspend fun getUserCount(): Long {
+suspend fun getProductCount(): Long {
     val db = FirebaseFirestore.getInstance()
-    val userCollection = db.collection("User")
+    val userCollection = db.collection("Product")
     val querySnapshot = userCollection.get().await()
     return querySnapshot.size().toLong()
 }

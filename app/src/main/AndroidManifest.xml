@@ -31,7 +31,7 @@
             android:theme="@style/Theme.Pizzeria" />
         <activity
             android:name=".UpdateCategory"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_update_category"
             android:theme="@style/Theme.Pizzeria" />
         <activity

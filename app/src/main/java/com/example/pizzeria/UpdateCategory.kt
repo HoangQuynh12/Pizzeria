@@ -92,11 +92,6 @@ class UpdateCategory : ComponentActivity() {
                                     Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
                                 }
                             },
-//                            actions = {
-//                                IconButton(onClick = {/* Do Something*/ }) {
-//                                    Icon(imageVector = Icons.Filled.Settings, null)
-//                                }
-//                            }
                         )
                     }
 
@@ -130,7 +125,7 @@ fun updateCategoryUI(
     categoryID: String?
 ){
 
-    var expanded by remember { mutableStateOf(false) }
+//    var expanded by remember { mutableStateOf(false) }
     val categoryImage = remember { mutableStateOf(imgUrl) }
 
     val newImageUrl = remember { mutableStateOf<String?>(null) }
@@ -160,7 +155,7 @@ fun updateCategoryUI(
                 focusedBorderColor = blueColor,
                 unfocusedBorderColor = blue
             ),
-            label = { Text(text = "Category name", color = grayFont)}
+            label = { Text(text = "Category Name", color = grayFont)}
         )
 
         Spacer(modifier = Modifier.size(30.dp))

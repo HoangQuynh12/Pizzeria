@@ -191,7 +191,7 @@ fun OrderDetailsUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                     shadowElevation = 10.dp,
                     onClick = {
                             val i = Intent(context, Order::class.java)
-                            i.putExtra("productID", item?.OrderID)
+                            i.putExtra("OrderID", item?.OrderID)
                             context.startActivity(i)
 
                     }
@@ -272,6 +272,7 @@ fun OrderDetailsUI(context: Context, orderList: SnapshotStateList<OrderData>) {
                                     i.putExtra("OrderID", item?.OrderID)
 
                                     context.startActivity(i)
+
                                 }
                             ) {
                                 Text(

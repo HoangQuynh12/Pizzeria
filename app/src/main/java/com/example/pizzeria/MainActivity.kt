@@ -54,6 +54,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.pizzeria.View.Category.CategoryDetails
+import com.example.pizzeria.View.Order.OrderDetails
+import com.example.pizzeria.View.Order.OrderManager
+import com.example.pizzeria.View.Product.ProductDetails
+import com.example.pizzeria.View.Revenue.Revenue
+import com.example.pizzeria.View.User.UserInformation
 import com.example.pizzeria.ui.theme.PizzeriaTheme
 import com.example.pizzeria.ui.theme.black
 import com.example.pizzeria.ui.theme.blue
@@ -192,7 +198,7 @@ fun HomeAdminScreen(context: Context, navController: NavHostController){
                     cardName1 = "Manager",
                     cardIcon = painterResource(id = R.drawable.ic_order)
                 ) {
-                    context.startActivity(Intent(context, Order::class.java))
+                    context.startActivity(Intent(context, OrderManager::class.java))
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -285,12 +291,12 @@ fun StatusCardLayout(context: Context, navController: NavHostController) {
     var totalConfirmed by remember { mutableStateOf(0.0) }
 
     // Lấy dữ liệu từ Firestore và cập nhật các giá trị
-    LaunchedEffect(Unit) {
-        productCount = getProductCount()
-        orderCount = getOrderCount()
-        totalConfirmed = getTotalConfirmed()
-    }
-
+//    LaunchedEffect(Unit) {
+//        productCount = getProductCount()
+//        orderCount = getOrderCount()
+//        totalConfirmed = getTotalConfirmed()
+//    }
+//
     val box = Brush.linearGradient(
         colors = listOf(blue, blue)
     )
@@ -350,18 +356,19 @@ suspend fun getOrderCount(): Long {
 }
 
 // Hàm để tính tổng total của các đơn hàng đã xác nhận
-suspend fun getTotalConfirmed(): Double {
-    val db = FirebaseFirestore.getInstance()
-    val orderCollection = db.collection("Order")
-    val querySnapshot = orderCollection.whereEqualTo("Status", "Completed").get().await()
-
-    var totalConfirmed = 0.0
-    for (document in querySnapshot) {
-        val order = document.toObject<OrderData>()
-        totalConfirmed += order.Total ?: 0.0
-    }
-    return totalConfirmed
-}
+//suspend fun getTotalConfirmed(): Double {
+//    val db = FirebaseFirestore.getInstance()
+//    val orderCollection = db.collection("orders")
+//    val querySnapshot = orderCollection.whereEqualTo("status", "Completed").get().await()
+//
+////    var totalConfirmed = 0.0
+////    for (document in querySnapshot) {
+////        val order = document.toObject<Order>()
+////        totalConfirmed += order.total ?: 0.0
+////    }
+////    return totalConfirmed
+//
+//}
 @Composable
 fun CardColumnContent(
     modifier: Modifier,

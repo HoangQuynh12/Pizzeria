@@ -15,77 +15,72 @@
         android:theme="@style/Theme.Pizzeria"
         tools:targetApi="31">
         <activity
-            android:name=".AddProduct"
+            android:name=".View.Product.AddProduct"
             android:exported="false"
             android:label="@string/title_activity_add_products"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".AddType"
+            android:name=".View.Category.AddType"
             android:exported="true"
             android:label="@string/title_activity_add_type"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".UpdateProducts"
+            android:name=".View.Product.UpdateProducts"
             android:exported="true"
             android:label="@string/title_activity_update_products"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".UpdateCategory"
+            android:name=".View.Category.UpdateCategory"
             android:exported="true"
             android:label="@string/title_activity_update_category"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".UpdateUser"
+            android:name=".View.User.UpdateUser"
             android:exported="true"
             android:label="@string/title_activity_update_user"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".CategoryDetails"
+            android:name=".View.Category.CategoryDetails"
             android:exported="true"
             android:label="@string/title_activity_category_details"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".OrderDetails"
+            android:name=".View.Order.OrderDetails"
             android:exported="true"
             android:label="@string/title_activity_order_details"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".Order"
-            android:exported="true"
-            android:label="@string/title_activity_order"
-            android:theme="@style/Theme.Pizzeria" />
-        <activity
-            android:name=".OrderPending"
+            android:name=".View.Order.OrderPending"
             android:exported="true"
             android:label="@string/title_activity_orderpending"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".OrderShipping"
+            android:name=".View.Order.OrderShipping"
             android:exported="true"
             android:label="@string/title_activity_ordershipping"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".OrderCancelled"
+            android:name=".View.Order.OrderCancelled"
             android:exported="true"
             android:label="@string/title_activity_ordercancelled"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".OrderCompleted"
+            android:name=".View.Order.OrderCompleted"
             android:exported="true"
             android:label="@string/title_activity_ordercompleted"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".Revenue"
+            android:name=".View.Revenue.Revenue"
             android:exported="true"
             android:label="@string/title_activity_revenue"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".ProductDetails"
+            android:name=".View.Product.ProductDetails"
             android:exported="true"
             android:label="@string/title_activity_product_details"
             android:theme="@style/Theme.Pizzeria" />
         <activity
-            android:name=".UserInformation"
+            android:name=".View.User.UserInformation"
             android:exported="true"
             android:label="@string/title_activity_user_information"
             android:theme="@style/Theme.Pizzeria" />

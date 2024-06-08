@@ -55,6 +55,26 @@
             android:label="@string/title_activity_order"
             android:theme="@style/Theme.Pizzeria" />
         <activity
+            android:name=".OrderPending"
+            android:exported="true"
+            android:label="@string/title_activity_orderpending"
+            android:theme="@style/Theme.Pizzeria" />
+        <activity
+            android:name=".OrderShipping"
+            android:exported="true"
+            android:label="@string/title_activity_ordershipping"
+            android:theme="@style/Theme.Pizzeria" />
+        <activity
+            android:name=".OrderCancelled"
+            android:exported="true"
+            android:label="@string/title_activity_ordercancelled"
+            android:theme="@style/Theme.Pizzeria" />
+        <activity
+            android:name=".OrderCompleted"
+            android:exported="true"
+            android:label="@string/title_activity_ordercompleted"
+            android:theme="@style/Theme.Pizzeria" />
+        <activity
             android:name=".Revenue"
             android:exported="true"
             android:label="@string/title_activity_revenue"

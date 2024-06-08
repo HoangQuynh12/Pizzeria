@@ -8,16 +8,16 @@
       <SelectionState runConfigName="OrderDetails">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MainActivity">
+      <SelectionState runConfigName="Revenue">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="CategoryDetails">
+      <SelectionState runConfigName="Order">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="UpdateCategory">
+      <SelectionState runConfigName="OrderPending">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="AddType">
+      <SelectionState runConfigName="OrderShipping">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

@@ -192,7 +192,7 @@ fun HomeAdminScreen(context: Context, navController: NavHostController){
                     cardName1 = "Manager",
                     cardIcon = painterResource(id = R.drawable.ic_order)
                 ) {
-                    context.startActivity(Intent(context, OrderDetails::class.java))
+                    context.startActivity(Intent(context, Order::class.java))
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -353,7 +353,7 @@ suspend fun getOrderCount(): Long {
 suspend fun getTotalConfirmed(): Double {
     val db = FirebaseFirestore.getInstance()
     val orderCollection = db.collection("Order")
-    val querySnapshot = orderCollection.whereEqualTo("Status", "Confirmed").get().await()
+    val querySnapshot = orderCollection.whereEqualTo("Status", "Completed").get().await()
 
     var totalConfirmed = 0.0
     for (document in querySnapshot) {

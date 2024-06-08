@@ -79,7 +79,7 @@ class Revenue : ComponentActivity() {
                     val dbOrder: CollectionReference = db.collection("Order")
 
                     LaunchedEffect(Unit) {
-                        val confirmedOrders = dbOrder.whereEqualTo("Status", "Confirmed").get().await()
+                        val confirmedOrders = dbOrder.whereEqualTo("Status", "Completed").get().await()
                         var total = 0.0
                         for (document in confirmedOrders) {
                             val order = document.toObject(OrderData::class.java)

@@ -1,247 +1,176 @@
 package com.example.pizzeria
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pizzeria.ui.theme.*
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.pizzeria.ui.theme.PizzeriaTheme
+import com.example.pizzeria.ui.theme.blue
 
 class Order : ComponentActivity() {
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PizzeriaTheme {
+                // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    Scaffold(
-                        topBar = {
-                            CenterAlignedTopAppBar(
-                                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                                    containerColor = blueColor,
-                                    titleContentColor = Color.White,
-                                    navigationIconContentColor = Color.White,
-                                    actionIconContentColor = Color.White
-                                ),
-                                title = {
-                                    Text(
-                                        text = "Order Details",
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                },
-                                navigationIcon = {
-                                    IconButton(onClick = {
-                                        this@Order.startActivity(Intent(this@Order, OrderDetails::class.java))
-                                    }) {
-                                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
-                                    }
-                                }
-                            )
-                        }
-                    ) { paddingValues ->
-                        val orderID = intent.getStringExtra("OrderID")
-                        if (orderID != null) {
-                            OrderUI(orderID, Modifier.padding(paddingValues))
-                        } else {
-                            Toast.makeText(this@Order, "Order ID is missing", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                    OrderScreen(LocalContext.current)
                 }
             }
         }
     }
 }
-
 @Composable
-fun OrderUI(orderID: String, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    var order by remember { mutableStateOf<OrderData?>(null) }
-
-    LaunchedEffect(orderID) {
-        val db = FirebaseFirestore.getInstance()
-        val orderRef = db.collection("Order").document(orderID)
-        orderRef.get().addOnSuccessListener { documentSnapshot ->
-            if (documentSnapshot.exists()) {
-                order = documentSnapshot.toObject(OrderData::class.java)
-            } else {
-                Toast.makeText(context, "Order not found", Toast.LENGTH_SHORT).show()
-            }
-        }.addOnFailureListener {
-            Toast.makeText(context, "Error while retrieving order details", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    order?.let { orderData ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(3.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+fun OrderScreen(context:Context){
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(top = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Surface(
-                shape = RoundedCornerShape(18.dp),
-                color = blue,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                shadowElevation = 10.dp
+            IconButton(onClick = { context.startActivity(Intent(context, MainActivity::class.java)) }) {
+                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
+            }
+            Spacer(modifier = Modifier.width(75.dp))
+            Text(
+                text = "Order Manager", style = TextStyle(
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            )
+
+        }
+        Surface(
+            color = blue,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(8.dp))
+                .padding(10.dp).border(width = 1.dp, color = Color.Black),
+            onClick = {
+                context.startActivity(Intent(context, OrderPending::class.java))
+            }
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.order),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = "",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Name: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.Name?.let {
-                            Text(
-                                text = it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Address: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.Address?.let {
-                            Text(
-                                text = it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "OrderDate: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.OrderDate?.let {
-                            Text(
-                                text = it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Status: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.Status?.let {
-                            Text(
-                                text = it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "PhoneNumber: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.PhoneNumber?.let {
-                            Text(
-                                text = "" + it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Total: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.Total?.let {
-                            Text(
-                                text = "$ " + it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                }
+                Text(
+                    text = "Processing",
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(10.dp)
+
+                )
+                Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription ="" )
+            }
+        }
+        Surface(
+            color = blue,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(8.dp))
+                .padding(10.dp).border(width = 1.dp, color = Color.Black),
+            onClick = {
+                context.startActivity(Intent(context, OrderShipping::class.java))
+            }
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Shipping",
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(10.dp)
+
+                )
+                Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription ="" )
+            }
+        }
+        Surface(
+            color = blue,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(8.dp))
+                .padding(10.dp).border(width = 1.dp, color = Color.Black),
+            onClick = {
+                context.startActivity(Intent(context, OrderCancelled::class.java))
+            }
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Canceled",
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(10.dp)
+
+                )
+                Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription ="" )
+            }
+        }
+        Surface(
+            color = blue,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape = RoundedCornerShape(8.dp))
+                .padding(10.dp).border(width = 1.dp, color = Color.Black),
+            onClick = {
+                context.startActivity(Intent(context, OrderCompleted::class.java))
+            }
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Completed",
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(10.dp)
+
+                )
+                Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription ="" )
             }
         }
     }

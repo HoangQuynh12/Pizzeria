@@ -52,7 +52,7 @@ class AddType : ComponentActivity() {
                             ),
                             title = {
                                 Text(
-                                    text = "Add Product",
+                                    text = "Add Category",
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     fontWeight = FontWeight.Bold
@@ -98,7 +98,7 @@ fun AddCategoryUI(context: Context) {
         context.startActivity(Intent(context, ProductDetails::class.java))
     }) {
         Text(
-            text = "All Product",
+            text = "All Category",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = blueColor,

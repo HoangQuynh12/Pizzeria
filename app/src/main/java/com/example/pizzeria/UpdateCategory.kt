@@ -4,51 +4,24 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,13 +38,8 @@ class UpdateCategory : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PizzeriaTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-                ) {
+                Surface(modifier = Modifier.fillMaxSize()) {
                     Scaffold {
-
                         CenterAlignedTopAppBar(
                             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                                 containerColor = blueColor,
@@ -88,27 +56,31 @@ class UpdateCategory : ComponentActivity() {
                                 )
                             },
                             navigationIcon = {
-                                IconButton(onClick = {this@UpdateCategory.startActivity(Intent(this@UpdateCategory, CategoryDetails::class.java))}) {
+                                IconButton(onClick = {
+                                    this@UpdateCategory.startActivity(
+                                        Intent(
+                                            this@UpdateCategory,
+                                            CategoryDetails::class.java
+                                        )
+                                    )
+                                }) {
                                     Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
                                 }
-                            },
+                            }
                         )
                     }
-
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(0.dp, 100.dp, 0.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-
                         updateCategoryUI(
                             LocalContext.current,
                             intent.getStringExtra("categoryName"),
-                            intent.getStringExtra("categoryID"),
                             intent.getStringExtra("categoryImage"),
+                            intent.getStringExtra("categoryID")
                         )
-
                     }
                 }
             }
@@ -123,26 +95,24 @@ fun updateCategoryUI(
     name: String?,
     imgUrl: String?,
     categoryID: String?
-){
+) {
 
-//    var expanded by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+
+    val categoryName = remember { mutableStateOf(name) }
     val categoryImage = remember { mutableStateOf(imgUrl) }
 
     val newImageUrl = remember { mutableStateOf<String?>(null) }
-    val categoryName = remember {
-        mutableStateOf(name)
-    }
     Column(
-        modifier = Modifier
-            .padding(40.dp),
+        modifier = Modifier.padding(40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-
-        ) {
+    ) {
         SelectItemImageSection { imageUrl ->
             newImageUrl.value = imageUrl
         }
+        Spacer(modifier = Modifier.size(7.dp))
         OutlinedTextField(
-            value = categoryName.value.toString(),
+            value = categoryName.value.orEmpty(),
             onValueChange = { categoryName.value = it },
             modifier = Modifier
                 .fillMaxWidth()
@@ -155,16 +125,16 @@ fun updateCategoryUI(
                 focusedBorderColor = blueColor,
                 unfocusedBorderColor = blue
             ),
-            label = { Text(text = "Category Name", color = grayFont)}
+            label = { Text(text = "Category Name", color = grayFont) }
         )
 
         Spacer(modifier = Modifier.size(30.dp))
         Button(
             onClick = {
-                if (TextUtils.isEmpty(categoryName.value.toString())) {
-                    Toast.makeText(context, "Please enter category name", Toast.LENGTH_SHORT)
-                        .show()
+                if (categoryName.value.isNullOrEmpty()) {
+                    Toast.makeText(context, "Please enter category name", Toast.LENGTH_SHORT).show()
                 }  else {
+
                     val imageUrl = newImageUrl.value ?: categoryImage.value
                     updateDataToFirebase(
                         categoryID,
@@ -173,6 +143,7 @@ fun updateCategoryUI(
                         context
                     )
                 }
+
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -184,10 +155,9 @@ fun updateCategoryUI(
             ),
             colors = ButtonDefaults.buttonColors(
                 containerColor = blueColor
-            ),
-//                border = BorderStroke(0.5.dp, Color.Red)
+            )
         ) {
-            Text(text = "Update", fontWeight = FontWeight.Bold,fontSize = 18.sp)
+            Text(text = "Update", fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
 
         Spacer(modifier = Modifier.size(10.dp))
@@ -204,8 +174,8 @@ fun updateCategoryUI(
             )
         }
     }
-
 }
+
 
 private fun updateDataToFirebase(
     categoryID: String?,
@@ -215,18 +185,12 @@ private fun updateDataToFirebase(
 ) {
     val updatedCategory = CategoryData(categoryID, name, imgUrl)
 
-    // getting our instance from Firebase Firestore.
-    val db = FirebaseFirestore.getInstance();
+    val db = FirebaseFirestore.getInstance()
     db.collection("Category").document(categoryID.toString()).set(updatedCategory)
         .addOnSuccessListener {
-            // on below line displaying toast message and opening
-            // new activity to view courses.
             Toast.makeText(context, "Update successful", Toast.LENGTH_SHORT).show()
             context.startActivity(Intent(context, CategoryDetails::class.java))
-            //  finish()
-
         }.addOnFailureListener {
-            Toast.makeText(context, "Product update error : " + it.message, Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(context, "Category update error: ${it.message}", Toast.LENGTH_SHORT).show()
         }
 }
